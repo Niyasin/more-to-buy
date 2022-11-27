@@ -6,6 +6,7 @@ import styles from '../styles/Home.module.css'
 export default function Home() {
   const [title,setTitle]=useState('Home');
   const [user,setUser]=useState(false);
+  const [filters,setFilters]=useState([]);
   const [items,setItems]=useState([
     { name:'ProductName', prize:'$50', image:'./sample.png', status:true,},
     { name:'ProductName', prize:'$50', image:'./sample.png', status:true,},
@@ -28,12 +29,18 @@ export default function Home() {
           <h1>{title}</h1>
         </div>
         <div className='right'>
-        <input placeholder='Search'></input>
+        <input type='text' placeholder='Search'></input>
         <div className='button'>Search</div>
         {!user?<div className='button'>Signup</div>:''}
         </div>
       </div>
-      <div className='sidePanel'></div>
+      <div className='sidePanel'>
+        <h1>Filters</h1>
+        <h1>Prize</h1>
+        <Slider/>
+        <TagSelector name="Brand" tags={['Puma','Nike','Adidas','NewBalance','Rebook']}/>
+        <TagSelector name="Colour" tags={['Black','White','Red','Blue','Green','Yellow']}/>
+      </div>
       <div className='productsContainer'>
       {items.map(I=>{
           return(<Item item={I}/>)
@@ -52,3 +59,50 @@ const Item =({item})=>{
     </div>
   )
 }
+
+const Slider =()=>{
+  const [value,setValue]=useState(10);
+  return(
+    <div className='horizontal'>
+      <input type='range'step={100} min={10} max={1000} onChange={e=>{setValue(e.target.value)}}/>
+      <h3>${value}</h3>
+    </div>
+  )
+}
+
+const TagSelector =({tags,name})=>{
+  const [selected,setSelected]=useState([]);
+  return(
+  <div className='filter'>
+    <div className='horizontal'>
+    <h1>{name}</h1>
+    <div className='iconButton' onClick={()=>{setSelected([])}}>
+      {selected.length?<svg viewBox="0 0 24 24"><path fill="none" stroke="#666" stroke-width="3" d="m3 3 18 18M3 21 21 3"/></svg>:''}
+    </div>
+    </div>
+  <div className='tags'>
+    {tags.map(t=>{
+      let c;
+      if(selected.includes(t)){
+        c='tag selectedTag'
+      }else{
+        c='tag';
+      }
+      return(
+        <div
+        className={c} 
+        onClick={()=>{
+            let i=selected.indexOf(t);
+            if(i!=-1){
+              setSelected(selected.filter(e=>{return(e!=t)}));
+            }else{
+              setSelected(selected.concat(t));
+            }
+          }}
+          >{t}</div>  
+          )
+        })}
+  </div>
+  </div>
+  );
+  }
