@@ -4,7 +4,14 @@ import { useState } from "react";
 export default function Item (){
     const router=useRouter();
     const {id}=router.query;
-    const [images,setImages]=useState(['../sample.png','../sample.png','../sample.png','../sample.png','../sample.png','../sample.png','../sample.png']);
+    const [data,setData]=useState(
+        {
+            name:'Product Name',
+            prize:'50',
+            offers:'12%',
+        }
+    );
+    const [images,setImages]=useState(['../sample.png','../sample.png','../sample.png','../sample.png','../sample.png']);
     const [selectedImage,setSelectedImages]=useState('../sample.png');
 return(
     <div className='itemContainer'>
