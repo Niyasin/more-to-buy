@@ -28,8 +28,6 @@
     box-sizing: border-box;
     font-size: 18px;
     color: #555;
-    gap:1%;
-    overflow-y: scroll;
 }
 .box p{
     font-size: 25px;
@@ -40,8 +38,8 @@
 .box svg{
     fill: none;
     stroke: #888;
-    width: 50px;
-    height:50px;
+    min-width: 50px;
+    min-height:50px;
 }
 .box:nth-child(1){
     grid-area:b;
@@ -65,32 +63,35 @@
 }
 .cartItem{
     padding: 0 2%;
-    height:20vh;
-    display: grid;
-    /* grid-template-areas: 'a b c' 'a d f' 'a e g'; */
-    /* grid-template-columns: 2fr 5fr 5fr; */
-    /* grid-template-rows: 2fr 1fr 10fr;     */
-    background:#e8e6e6;
+    height:10vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background:hsl(0, 0%, 95%);
     overflow: hidden;
     gap:5%;
     border-radius: 15px;
 }
-.cartItem :last-child{
-    margin-bottom: 100px;
-}
-.cartItem h2{
-    grid-area: b;
-}
+
 .cartItem img{
-    grid-area: a;
+    flex: 1;
     width: 100%;
     height: 100%;
     object-fit: contain;
 }
+.cartItem h1{
+ flex: 2;
+}
 .cartItem h3{
-    grid-area: d;
+    flex: 3;
 }
 
 .cartItem div :nth-child(1){
     grid-area: c;
+}
+.boxHeader{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
