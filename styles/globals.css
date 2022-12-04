@@ -27,7 +27,6 @@ h3{
  grid-template-columns: 2fr 10fr;
  grid-template-rows: 1fr 20fr;
  overflow-y: hidden;
-
 }
 .button{
   background: #2b2b2b;
@@ -39,6 +38,7 @@ h3{
   font-size:22px;
   cursor: pointer;
   white-space:nowrap;
+  max-height: 1.5em;
 }
 .button:hover{
   background: rgb(224, 176, 31);
