@@ -4,7 +4,7 @@
     display: grid;
     grid-template-rows: 100%;
     grid-template-areas: 'a b c e ' 'a d d e ' 'a d d  e';
-    grid-template-columns: 1fr repeat(3,3fr) ;
+    grid-template-columns: 1fr repeat(3,5fr) ;
     grid-template-rows: 10fr 20fr 20fr ;
     gap: 1%;
     padding:1%;
@@ -12,11 +12,6 @@
     box-sizing: border-box;
     background: #e8e6e6;
    }
-.sidePanel{
-    grid-area: a;
-    background:#fff;
-    border-radius:15px;
-}
 .box{
     background:#fff;
     border-radius:15px;

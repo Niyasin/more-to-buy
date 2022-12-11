@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import DB from '../styles/Dashboard.module.css';
+import Nav from '../Nav.js';
 export default function Dashboard(){
     const [data,setData]=useState({
         username:'Username',
         email:'user@gmail.com',
         phone:'+1 8566779944',
+        image:'./images/unknown.jpg',
         address:'Do nostrud anim nostrud sint consectetur',
         orderCount:0,
         cart:[
@@ -14,7 +16,6 @@ export default function Dashboard(){
     });
     return(
         <div className={DB.container}>
-            
             <div className={DB.box}> 
             <div className='horizontal'>
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M11.845 21.662C8.152 21.662 5 21.087 5 18.787c0-2.301 3.133-4.425 6.845-4.425 3.691 0 6.844 2.103 6.844 4.404 0 2.3-3.133 2.896-6.845 2.896Zm-.008-10.488a4.386 4.386 0 1 0 0-8.774A4.388 4.388 0 0 0 7.45 6.787a4.37 4.37 0 0 0 4.356 4.387h.031Z" clip-rule="evenodd" stroke="#130F26" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -40,9 +41,6 @@ export default function Dashboard(){
             <p>{data.orderCount} Active Orders</p>
             </div>
 
-
-            
-
             <div className={DB.box}> 
             <div className={DB.boxHeader}>
                 <div className='horizontal'>
@@ -65,9 +63,7 @@ export default function Dashboard(){
                 </div>
 
             </div>
-
-            <div className={DB.sidePanel}>
-            </div>
+            <Nav data={data}/>
         </div>
     );
 }

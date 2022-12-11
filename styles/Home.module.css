@@ -1,4 +1,46 @@
 .container{
-  width:100vw;
-  height:100vw;
-}
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  grid-template-rows: 100%;
+  grid-template-areas:'a b b b ' 
+                      'a d d d ';
+  grid-template-columns: 1fr repeat(3,5fr) ;
+  grid-template-rows: 2fr 20fr;
+  gap: 2%;
+  padding:1%;
+  overflow-y: hidden;
+  box-sizing: border-box;
+  background: #e8e6e6;
+ }
+
+ .products{
+  grid-area:d;
+  height: 100%;
+  /* padding:1%; */
+  display: grid;
+  grid-template-columns: repeat(5,1fr);
+  grid-template-rows: repeat(10,1fr);
+  overflow-y: scroll;
+  gap:3%;
+ }
+ .header{
+  grid-area:b;
+  height: 100%;
+  background: #fff;
+  border-radius:15px;
+  display: flex;
+  gap:1%;
+  align-items: center;
+  padding: 0 1%;
+ }
+
+ .input{
+  width: 500px;
+  height:50px;
+  border: none;
+  background: #eee;
+  border-radius: 10px;
+  font-size:18px;
+  padding: 0 1%;
+ }
