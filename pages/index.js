@@ -1,26 +1,21 @@
 import Head from 'next/head'
-import Image from 'next/image'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import home from '../styles/Home.module.css';
 import Nav from '../Nav.js';
 import {initFireBase} from './client';
 import {GoogleAuthProvider,getAuth,signInWithPopup} from 'firebase/auth'
-
+import {collection,getDocs,getFirestore} from 'firebase/firestore';
 export default function Home() {
-  const [title,setTitle]=useState('Home');
   const [user,setUser]=useState(null);
-  const [filters,setFilters]=useState([]);
-  const [items,setItems]=useState([
-    { name:'ProductName', prize:'$50', image:'./sample.png', status:true,},
-
-  ]);
+  const [items,setItems]=useState([]);
+  
+  
+  
   const app=initFireBase();
-  console.log(app) ;
   const provider=new GoogleAuthProvider();
   const auth = getAuth();
   const signIn= async ()=>{
     try{
-
       const result=await signInWithPopup(auth,provider);
       setUser({
         username:result.user.displayName,
@@ -30,6 +25,15 @@ export default function Home() {
       });
     }catch(e){}
   }
+  const db =getFirestore(app);
+  const loadProducts=async()=>{
+    let snap=await getDocs(collection(db,'products'));
+    let docs=snap.docs.map((doc)=>{ return doc.data()})
+    setItems(docs);
+  }
+  useEffect(()=>{
+    loadProducts();
+  },[])
   return (
     <div className={home.container}>
       <Head>
@@ -39,7 +43,7 @@ export default function Home() {
       <Nav data={user}/>
       <div className={home.header}>
         <input type="text" className={home.input} placeholder='Search'/>
-        <div className='button'>Search</div>
+        <div className='button' onClick={loadProducts}>Search</div>
         {user?
         <img className={home.profilepic} src={user.profilepic}/>
         :
@@ -63,7 +67,7 @@ const Item =({item})=>{
     <div className='item'>
       <img src={item.image}/>
       <h2>{item.name}</h2>
-      <h3>{item.prize}</h3>
+      <h3>${item.prize}</h3>
     </div>
   )
 }

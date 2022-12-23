@@ -10,12 +10,12 @@ h2,h3{
   margin: 0;
 }
 h2{
-  font-size: 40px;
-  line-height:40px;
+  font-size: 30px;
+  line-height:30px;
   color: #2b2b2b;
 }
 h3{
-  font-size:1.5em;
+  font-size:2.5em;
   color: #51ae1f;
 }
 
@@ -61,7 +61,8 @@ h3{
   grid-area: p;
 }
 .item img{
-  width: 100%;
+  width: 80%;
+  justify-self:center;
   transition: 0.1s;
 }
 .item:hover img{

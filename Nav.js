@@ -6,7 +6,7 @@ const Nav=(prop)=>{
                 {prop.data?
 
                 <div className={N.navIcon}>
-                <img src={prop.data.profilepic}/>
+                <img src={prop.data.profilepic} alt='images/unknown.jpg'/>
                 <span className={N.small}>
                     {prop.data.username}
                     </span>
