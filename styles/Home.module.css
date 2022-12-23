@@ -27,12 +27,23 @@
  .header{
   grid-area:b;
   height: 100%;
+  width:initial;
   background: #fff;
   border-radius:15px;
-  display: flex;
+  display:grid;
+  grid-auto-flow: column;
+  grid-template-columns: 1fr 1fr 10fr;
   gap:1%;
   align-items: center;
+  justify-content: flex-start;
   padding: 0 1%;
+ }
+ .header>:nth-child(3){
+  justify-self: right;
+ }
+ .profilepic{
+  width: 50px;
+  border-radius: 50px;
  }
 
  .input{

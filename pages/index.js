@@ -3,15 +3,33 @@ import Image from 'next/image'
 import { useState } from 'react';
 import home from '../styles/Home.module.css';
 import Nav from '../Nav.js';
+import {initFireBase} from './client';
+import {GoogleAuthProvider,getAuth,signInWithPopup} from 'firebase/auth'
 
 export default function Home() {
   const [title,setTitle]=useState('Home');
-  const [user,setUser]=useState(false);
+  const [user,setUser]=useState(null);
   const [filters,setFilters]=useState([]);
   const [items,setItems]=useState([
     { name:'ProductName', prize:'$50', image:'./sample.png', status:true,},
 
   ]);
+  const app=initFireBase();
+  console.log(app) ;
+  const provider=new GoogleAuthProvider();
+  const auth = getAuth();
+  const signIn= async ()=>{
+    try{
+
+      const result=await signInWithPopup(auth,provider);
+      setUser({
+        username:result.user.displayName,
+        displayname:result.user.displayName,
+        profilepic:result.user.photoURL,
+        email:result.user.email,
+      });
+    }catch(e){}
+  }
   return (
     <div className={home.container}>
       <Head>
@@ -20,7 +38,13 @@ export default function Home() {
       </Head>
       <Nav data={user}/>
       <div className={home.header}>
-        <input type="text" className={home.input} placeholder='Search'/><div className='button'>Search</div>
+        <input type="text" className={home.input} placeholder='Search'/>
+        <div className='button'>Search</div>
+        {user?
+        <img className={home.profilepic} src={user.profilepic}/>
+        :
+        <div className='button' onClick={signIn}>Login</div>
+        }
       </div>
       <div className={home.products}>
         {items.map(p=>{
@@ -28,7 +52,6 @@ export default function Home() {
             <Item item={p}/>
           )
         })}
-
       </div>
       
     </div>

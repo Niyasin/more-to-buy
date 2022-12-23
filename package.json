@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "firebase": "^9.15.0",
+    "firebase-react-tools": "^0.3.0",
     "next": "13.0.5",
     "package.json": "^2.0.1",
     "react": "18.2.0",
