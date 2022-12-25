@@ -2,7 +2,7 @@ import Head from 'next/head'
 import { useEffect, useState } from 'react';
 import home from '../styles/Home.module.css';
 import Nav from '../Nav.js';
-import {initFireBase} from './client';
+import {initFireBase} from '../firebase/client';
 import {collection,getDocs,getFirestore} from 'firebase/firestore';
 import {GoogleAuthProvider,signInWithPopup,getIdToken,getAuth} from 'firebase/auth'
 
@@ -17,7 +17,7 @@ export default function Home() {
   const app=initFireBase();
   const db =getFirestore(app);
   const provider=new GoogleAuthProvider();
-  const auth = getAuth();
+  const auth = getAuth(app);
 
   //functions
   const signIn= async ()=>{

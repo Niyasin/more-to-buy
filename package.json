@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "firebase": "^9.15.0",
+    "firebase-admin": "^11.4.1",
     "firebase-react-tools": "^0.3.0",
     "next": "13.0.5",
     "package.json": "^2.0.1",

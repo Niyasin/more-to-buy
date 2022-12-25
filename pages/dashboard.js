@@ -1,7 +1,7 @@
 import { useState ,useEffect} from 'react';
 import DB from '../styles/Dashboard.module.css';
 import Nav from '../Nav.js';
-import {initFireBase} from './client';
+import {initFireBase} from '../firebase/client';
 import {collection,getDocs,getFirestore} from 'firebase/firestore';
 import {GoogleAuthProvider,signInWithPopup,getIdToken,getAuth} from 'firebase/auth'
 export default function Dashboard(){
@@ -13,22 +13,38 @@ export default function Dashboard(){
         image:null,
         address:null,
         orderCount:0,
-        cart:[
-            { name:'ProductName', prize:'$50', image:'./sample.png', status:true,},
-            { name:'ProductName', prize:'$500', image:'./sample.png', status:true,},
-        ],
+        cart:[],
     });
     //functions
     const signout=async ()=>{ 
         await auth.signOut();
         window.location='/'
     }
-    
+
+    const loadData=async ()=>{
+        if(user){
+            let token=await auth.currentUser.getIdToken();
+            let xhr =new XMLHttpRequest();
+            xhr.open('POST','/api/userdata');
+            xhr.setRequestHeader('Content-Type','application/json');
+            xhr.send(JSON.stringify({
+                uid:user.uid,
+                token:token,
+            }));
+            xhr.onload=()=>{
+                let d=JSON.parse(xhr.responseText);
+                if(!d.error){
+                    setData(d.data);
+                }
+            }
+        }  
+    }
+
   //firebase
   const app=initFireBase();
   const db =getFirestore(app);
   const provider=new GoogleAuthProvider();
-  const auth = getAuth();
+  const auth = getAuth(app);
 
 
     //effects
@@ -48,7 +64,9 @@ export default function Dashboard(){
           }
         });
       },[]);
-
+      useEffect(()=>{
+        loadData();
+      },[user]);
     return(
         <>
         {user?

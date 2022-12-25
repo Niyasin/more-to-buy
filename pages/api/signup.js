@@ -1,5 +1,5 @@
 import { collection, doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
-import { initFireBase } from "../client";
+import {initFireBase} from '../../firebase/client';
 const app=initFireBase();
 const db=getFirestore(app);
 export default async function handler(req, res) {
