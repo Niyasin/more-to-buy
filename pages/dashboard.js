@@ -1,28 +1,64 @@
-import { useState } from 'react';
+import { useState ,useEffect} from 'react';
 import DB from '../styles/Dashboard.module.css';
 import Nav from '../Nav.js';
+import {initFireBase} from './client';
+import {collection,getDocs,getFirestore} from 'firebase/firestore';
+import {GoogleAuthProvider,signInWithPopup,getIdToken,getAuth} from 'firebase/auth'
 export default function Dashboard(){
+    const [user,setUser]=useState(null);
     const [data,setData]=useState({
-        username:'Username',
-        email:'user@gmail.com',
-        phone:'+1 8566779944',
-        image:'./images/unknown.jpg',
-        address:'Do nostrud anim nostrud sint consectetur',
+        username:null,
+        email:null,
+        phone:null,
+        image:null,
+        address:null,
         orderCount:0,
         cart:[
             { name:'ProductName', prize:'$50', image:'./sample.png', status:true,},
             { name:'ProductName', prize:'$500', image:'./sample.png', status:true,},
         ],
     });
+    //functions
+    const signout=async ()=>{ 
+        await auth.signOut();
+        window.location='/'
+    }
+    
+  //firebase
+  const app=initFireBase();
+  const db =getFirestore(app);
+  const provider=new GoogleAuthProvider();
+  const auth = getAuth();
+
+
+    //effects
+    useEffect(()=>{
+        //auto login
+        auth.onAuthStateChanged(user=>{
+          if(user){
+            setUser({
+              username:auth.currentUser.displayName,
+              displayname:auth.currentUser.displayName,
+              profilepic:auth.currentUser.photoURL,
+              email:auth.currentUser.email,
+              uid:auth.currentUser.uid,
+            });
+          }else{
+            setUser(null);
+          }
+        });
+      },[]);
+
     return(
+        <>
+        {user?
         <div className={DB.container}>
             <div className={DB.box}> 
             <div className='horizontal'>
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M11.845 21.662C8.152 21.662 5 21.087 5 18.787c0-2.301 3.133-4.425 6.845-4.425 3.691 0 6.844 2.103 6.844 4.404 0 2.3-3.133 2.896-6.845 2.896Zm-.008-10.488a4.386 4.386 0 1 0 0-8.774A4.388 4.388 0 0 0 7.45 6.787a4.37 4.37 0 0 0 4.356 4.387h.031Z" clip-rule="evenodd" stroke="#130F26" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <h1>{data.username}</h1>
+            <img src={user.profilepic}/>
+            <h1>{user.username}</h1>
             </div>
-            <p>{data.email}</p>
-            <p>{data.phone}</p>
+            <p>{user.email}</p>
             </div>
 
             <div className={DB.box}> 
@@ -63,8 +99,11 @@ export default function Dashboard(){
                 </div>
 
             </div>
-            <Nav data={data}/>
+            <Nav user={user} signout={signout} />
         </div>
+        :<>
+        </>}
+        </>
     );
 }
 const CartItem=({name,prize,image})=>{

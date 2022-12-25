@@ -30,11 +30,16 @@
     padding: 0;
     margin: 0;
 }
-.box svg{
+.box svg, .box img {
     fill: none;
     stroke: #888;
-    min-width: 50px;
-    min-height:50px;
+    width: 50px;
+    height:50px;
+}
+.box img {
+    width: 60px;
+    height:60px;
+    border-radius: 60px;
 }
 .box:nth-child(1){
     grid-area:b;

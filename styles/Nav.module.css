@@ -24,6 +24,14 @@
     justify-content: center;
     color: #888;
     font-size: 15px;
+    transition: 0.1s;
+}
+.navIcon:hover{
+    transform: scale(1.1);
+    color: #4baaaa;
+}
+.navIcon:hover svg{
+    stroke: #4baaaa;
 }
 .small{
     font-size:10px;
