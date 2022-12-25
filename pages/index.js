@@ -3,17 +3,23 @@ import { useEffect, useState } from 'react';
 import home from '../styles/Home.module.css';
 import Nav from '../Nav.js';
 import {initFireBase} from './client';
-import {GoogleAuthProvider,getAuth,signInWithPopup} from 'firebase/auth'
 import {collection,getDocs,getFirestore} from 'firebase/firestore';
+import {GoogleAuthProvider,getAuth,signInWithPopup} from 'firebase/auth'
+
 export default function Home() {
+
+  //states
   const [user,setUser]=useState(null);
   const [items,setItems]=useState([]);
   
   
-  
+  //firebase
   const app=initFireBase();
+  const db =getFirestore(app);
   const provider=new GoogleAuthProvider();
   const auth = getAuth();
+
+  //functions
   const signIn= async ()=>{
     try{
       const result=await signInWithPopup(auth,provider);
@@ -22,18 +28,33 @@ export default function Home() {
         displayname:result.user.displayName,
         profilepic:result.user.photoURL,
         email:result.user.email,
+        uid:result.user.uid,
       });
+      let xhr=new XMLHttpRequest();
+      xhr.open('POST','/api/signup');
+      xhr.setRequestHeader('Content-Type','application/json');
+      xhr.send(JSON.stringify({
+        username:result.user.displayName,
+        profilepic:result.user.photoURL,
+        email:result.user.email,
+        uid:result.user.uid,
+      }));
     }catch(e){}
   }
-  const db =getFirestore(app);
+
+
   const loadProducts=async()=>{
     let snap=await getDocs(collection(db,'products'));
     let docs=snap.docs.map((doc)=>{ return doc.data()})
     setItems(docs);
   }
+
+
+  //effects
   useEffect(()=>{
     loadProducts();
   },[])
+
   return (
     <div className={home.container}>
       <Head>
@@ -43,7 +64,7 @@ export default function Home() {
       <Nav data={user}/>
       <div className={home.header}>
         <input type="text" className={home.input} placeholder='Search'/>
-        <div className='button' onClick={loadProducts}>Search</div>
+        <div className='button' onClick={signup}>Search</div>
         {user?
         <img className={home.profilepic} src={user.profilepic}/>
         :
