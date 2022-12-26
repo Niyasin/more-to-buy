@@ -42,7 +42,6 @@ export default function Home() {
     }catch(e){}
   }
 
-  //functions
   const signout=async ()=>{ 
     await auth.signOut();
   }

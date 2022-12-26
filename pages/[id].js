@@ -3,15 +3,39 @@ import { useRouter } from "next/router"
 import { useEffect, useState } from "react";
 import Loading from '../Loading';
 import { initFireBase} from "../firebase/client";
+import { getAuth } from "firebase/auth";
 import I from'../styles/Item.module.css';
 import Nav from "../Nav";
 export default function Item (){
     const router = useRouter();
     const { id }=router.query;
+    const [user,setUser]=useState(null);
     const [data,setData]=useState(null);
     const [selectedImage,setSelectedImages]=useState(0);
     const app=initFireBase();
     const db = getFirestore(app);
+    const auth=getAuth(app);
+    useEffect(()=>{
+        //auto login
+        auth.onAuthStateChanged(user=>{
+          if(user){
+            setUser({
+              username:auth.currentUser.displayName,
+              displayname:auth.currentUser.displayName,
+              profilepic:auth.currentUser.photoURL,
+              email:auth.currentUser.email,
+              uid:auth.currentUser.uid,
+            });
+          }else{
+            setUser(null);
+          }
+        });
+      },[]);
+
+    const signout=async ()=>{ 
+        await auth.signOut();
+    }
+    
     const loadData=async()=>{
         try{
             if(id){
@@ -30,7 +54,7 @@ export default function Item (){
 return(<>
     {data?
     <div className={I.container}>
-        <Nav/>
+        <Nav user={user} signout={signout}/>
         <div className={I.gallery}>
             <img className={I.preview} src={data.images[selectedImage]}/>
             <div className={I.galleryItems}>
