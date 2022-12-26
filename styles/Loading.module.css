@@ -1,0 +1,36 @@
+.container{
+    position: absolute;
+    top:calc(50vh - 10px);
+    left:calc(50vw - 34px);
+    display: flex;
+    gap:3px
+}
+.box{
+    width: 20px;
+    height: 20px;
+    border-radius: 50px;
+    animation: anim 1s infinite ease;
+}
+.box:nth-child(1){
+    background:rgb(175, 59, 160);
+    animation-delay:0.1s;
+}
+.box:nth-child(2){
+    background:rgb(42, 161, 112);
+    animation-delay:0.2s;
+}
+.box:nth-child(3){
+    background:rgb(231, 228, 22);
+    animation-delay:0.3s;
+}
+@keyframes anim{
+    0%{
+        transform: translateY(10px);
+    }
+    50%{
+        transform: translateY(-10px);
+    }
+    100%{
+        transform: translateY(10px);
+    }
+}
