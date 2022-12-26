@@ -48,9 +48,15 @@ export default function Home() {
   }
 
   const loadProducts=async()=>{
-    let snap=await getDocs(collection(db,'products'));
-    let docs=snap.docs.map((doc)=>{ return doc.data()})
-    setItems(docs);
+    let xhr=new XMLHttpRequest();
+    xhr.open('GET','/api/products');
+    xhr.onload=()=>{
+      let data=JSON.parse(xhr.responseText);
+      if(!data.error){
+        setItems(data.data);
+      }
+    }
+    xhr.send();
   }
 
 
@@ -105,7 +111,7 @@ export default function Home() {
 
 const Item =({item})=>{
   return(
-    <div className='item'>
+    <div className='item' onClick={()=>{window.location='/'+item.id}}>
       <img src={item.image}/>
       <h2>{item.name}</h2>
       <h3>${item.prize}</h3>
