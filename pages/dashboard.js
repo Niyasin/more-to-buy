@@ -23,6 +23,28 @@ export default function Dashboard(){
         window.location='/'
     }
 
+    const dropFromCart=async (index)=>{
+        if(user){
+          let token=await auth.currentUser.getIdToken();
+          let xhr = new XMLHttpRequest();
+          xhr.open('POST','/api/dropfromcart');
+          xhr.setRequestHeader('Content-Type','application/json');
+          xhr.send(JSON.stringify({
+            uid:user.uid,
+            token:token,
+            index,
+          }));
+          xhr.onload=()=>{
+            let d=JSON.parse(xhr.responseText);
+            if(!d.error){
+             let dt=data.cart;
+             dt.splice(index,1);
+             setData({cart:dt});
+            }
+          }
+        }
+      }
+
     const loadData=async ()=>{
         if(user){
             let token=await auth.currentUser.getIdToken();
@@ -67,21 +89,19 @@ export default function Dashboard(){
           }
         });
       },[]);
+      
       useEffect(()=>{
         loadData();
       },[user]);
 
       useEffect(()=>{
-        changeTotal();
-      },[data])
-    const changeTotal=()=>{
         let t=0;
-        // console.log('hello');
         data.cart.forEach(e=>{
             t+=e.prize*e.count;
         });
         setTotal(t);
-      }
+      },[data]);
+
 
     return(
         <>
@@ -128,11 +148,14 @@ export default function Dashboard(){
             <div className={DB.cartList}> 
             {data.cart.map((item,i)=>{
                 return(
-                    <CartItem {...item} id={i} changeCount={(c)=>{
-                        let d=data;
-                        d.cart[i].count=c;
-                        setData(d);
-                        changeTotal();
+                    <CartItem {...item} id={i}  
+                    remove={()=>{
+                        dropFromCart(i);
+                    }}
+                    changeCount={(c)=>{
+                        let d=data.cart;
+                        d[i].count=c;
+                        setData({cart:d});
                     }}/>
                     );
                 })}
@@ -147,7 +170,7 @@ export default function Dashboard(){
         </>
     );
 }
-const CartItem=({name,prize,image,changeCount})=>{
+const CartItem=({name,prize,image,changeCount,remove})=>{
     const [num,setNum]=useState(1);
     useEffect(()=>{
         changeCount(num);
@@ -159,7 +182,7 @@ const CartItem=({name,prize,image,changeCount})=>{
             <h3>${prize}</h3>
             <NumInput num={num} setNum={setNum}/>
             <div className='button'>Buy Now</div>
-            <div className='button'>Delete</div>
+            <div className='button' onClick={remove}>Delete</div>
         </div>
     );
 }
