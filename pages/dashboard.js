@@ -4,6 +4,7 @@ import Nav from '../Nav.js';
 import {initFireBase} from '../firebase/client';
 import {collection,getDocs,getFirestore} from 'firebase/firestore';
 import {GoogleAuthProvider,signInWithPopup,getIdToken,getAuth} from 'firebase/auth'
+import LoginPopup from '../LoginPopup';
 export default function Dashboard(){
     const [user,setUser]=useState(null);
     const [data,setData]=useState({
@@ -45,6 +46,7 @@ export default function Dashboard(){
   const db =getFirestore(app);
   const provider=new GoogleAuthProvider();
   const auth = getAuth(app);
+
 
 
     //effects
@@ -120,6 +122,7 @@ export default function Dashboard(){
             <Nav user={user} signout={signout} />
         </div>
         :<>
+        <LoginPopup toggle={()=>{window.location='/'}}/>
         </>}
         </>
     );
