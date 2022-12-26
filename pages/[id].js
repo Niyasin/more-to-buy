@@ -35,7 +35,30 @@ export default function Item (){
     const signout=async ()=>{ 
         await auth.signOut();
     }
-    
+
+    const addToCart=async ()=>{
+      if(user){
+        let token=await auth.currentUser.getIdToken();
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST','/api/addtocart');
+        xhr.setRequestHeader('Content-Type','application/json');
+        xhr.send(JSON.stringify({
+          uid:user.uid,
+          token:token,
+          productID:id,
+          count:1,
+        }));
+        xhr.onload=()=>{
+          let d=JSON.parse(xhr.responseText);
+          if(!d.error){
+            window.location='/dashboard';
+          }
+        }
+      }else{
+        window.location='/dashboard';
+      }
+    }
+
     const loadData=async()=>{
         try{
             if(id){
@@ -74,7 +97,7 @@ return(<>
                 <Rating value={data.rating}/>
             </div>
             <div className="horizontal">
-            <div className="button">Add To Cart</div>
+            <div className="button" onClick={addToCart}>Add To Cart</div>
             <div className="button">Buy Now</div>
             </div>
             <div className={I.reviewContainer}>

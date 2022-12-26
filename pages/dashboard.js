@@ -7,6 +7,7 @@ import {GoogleAuthProvider,signInWithPopup,getIdToken,getAuth} from 'firebase/au
 import LoginPopup from '../LoginPopup';
 export default function Dashboard(){
     const [user,setUser]=useState(null);
+    const [total,setTotal]=useState(0);
     const [data,setData]=useState({
         username:null,
         email:null,
@@ -69,6 +70,19 @@ export default function Dashboard(){
       useEffect(()=>{
         loadData();
       },[user]);
+
+      useEffect(()=>{
+        changeTotal();
+      },[data])
+    const changeTotal=()=>{
+        let t=0;
+        // console.log('hello');
+        data.cart.forEach(e=>{
+            t+=e.prize*e.count;
+        });
+        setTotal(t);
+      }
+
     return(
         <>
         {user?
@@ -104,6 +118,7 @@ export default function Dashboard(){
                     <h1>Cart</h1>
                 </div>
                 <div className='horizontal'>
+                    <h2>${total}</h2>
                     <div className='button'>Buy</div>
                     <div className='button'>Clear</div>
                 </div> 
@@ -113,7 +128,12 @@ export default function Dashboard(){
             <div className={DB.cartList}> 
             {data.cart.map((item,i)=>{
                 return(
-                    <CartItem {...item}/>
+                    <CartItem {...item} id={i} changeCount={(c)=>{
+                        let d=data;
+                        d.cart[i].count=c;
+                        setData(d);
+                        changeTotal();
+                    }}/>
                     );
                 })}
                 </div>
@@ -127,14 +147,29 @@ export default function Dashboard(){
         </>
     );
 }
-const CartItem=({name,prize,image})=>{
+const CartItem=({name,prize,image,changeCount})=>{
+    const [num,setNum]=useState(1);
+    useEffect(()=>{
+        changeCount(num);
+    },[num])
     return(
         <div className={DB.cartItem}>
             <img src={image}/>
             <h1>{name}</h1>
-            <h3>{prize}</h3>
+            <h3>${prize}</h3>
+            <NumInput num={num} setNum={setNum}/>
             <div className='button'>Buy Now</div>
             <div className='button'>Delete</div>
         </div>
     );
+}
+
+const NumInput=(prop)=>{
+    return(
+        <div className={DB.numberInput}>
+            <div onClick={()=>{prop.num>1?prop.setNum(prop.num-1):0}}>-</div>
+            <div>{prop.num}</div>
+            <div onClick={()=>{prop.setNum(prop.num+1)}}>+</div>
+        </div>
+    )
 }
