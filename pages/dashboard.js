@@ -5,24 +5,25 @@ import {initFireBase} from '../firebase/client';
 import {collection,getDocs,getFirestore} from 'firebase/firestore';
 import {GoogleAuthProvider,signInWithPopup,getIdToken,getAuth} from 'firebase/auth'
 import LoginPopup from '../LoginPopup';
+import OrderPopup from '../OrderPopup';
 export default function Dashboard(){
     const [user,setUser]=useState(null);
     const [total,setTotal]=useState(0);
+    const [order,setOrder]=useState(false);
     const [data,setData]=useState({
         username:null,
         email:null,
         phone:null,
         image:null,
         address:null,
-        orderCount:0,
         cart:[],
+        orders:[],
     });
     //functions
     const signout=async ()=>{ 
         await auth.signOut();
         window.location='/'
     }
-
     const dropFromCart=async (index)=>{
         if(user){
           let token=await auth.currentUser.getIdToken();
@@ -37,14 +38,18 @@ export default function Dashboard(){
           xhr.onload=()=>{
             let d=JSON.parse(xhr.responseText);
             if(!d.error){
-             let dt=data.cart;
-             dt.splice(index,1);
-             setData({cart:dt});
+                if(index!=-1){
+                    let dt=data.cart;
+                    dt.splice(index,1);
+                    setData({...data,cart:dt});
+                }else{
+                    setData({...data,cart:[]});
+                }
             }
           }
         }
       }
-
+      useEffect(()=>{},[data.address])
     const loadData=async ()=>{
         if(user){
             let token=await auth.currentUser.getIdToken();
@@ -58,7 +63,8 @@ export default function Dashboard(){
             xhr.onload=()=>{
                 let d=JSON.parse(xhr.responseText);
                 if(!d.error){
-                    setData(d.data);
+                    setData({...d.data,token});
+                    console.log(d.data.cart);
                 }
             }
         }  
@@ -107,6 +113,7 @@ export default function Dashboard(){
         <>
         {user?
         <div className={DB.container}>
+            {order && data.cart.length>0?<OrderPopup user={user} data={data} item={order} setOrder={setOrder}/>:<></>}
             <div className={DB.box}> 
             <div className='horizontal'>
             <img src={user.profilepic}/>
@@ -117,7 +124,7 @@ export default function Dashboard(){
 
             <div className={DB.box}> 
             <div className='horizontal'>
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-width="2" d="M12 22s-8-6-8-12c0-5 4-8 8-8s8 3 8 8c0 6-8 12-8 12Zm0-9a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/></svg>
+            <svg viewBox="0 0 24 24"><path strokeWidth="2" d="M12 22s-8-6-8-12c0-5 4-8 8-8s8 3 8 8c0 6-8 12-8 12Zm0-9a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/></svg>
             <h1>Address</h1>
             </div>
             <p>{data.address}</p>
@@ -125,22 +132,37 @@ export default function Dashboard(){
             
             <div className={DB.box}> 
             <div className='horizontal'>
-            <svg  viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"stroke-width="2" ><path d="m16.5 9.4-9-5.19M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.27 6.96 12 12.01l8.73-5.05M12 22.08V12"/></svg>
+            <svg  viewBox="0 0 24 24" strokeWidth="2" ><path d="m16.5 9.4-9-5.19M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.27 6.96 12 12.01l8.73-5.05M12 22.08V12"/></svg>
             <h1>Status</h1>
             </div>
-            <p>{data.orderCount} Active Orders</p>
+            <p>{data.orders.length} Active Orders</p>
+            {data.orders.map((order)=>{
+                return(
+                    <div className={DB.order}>
+                        <div className='horizontal'>
+                            <h4>{order.name}</h4>
+                            <h3>${order.prize*order.count}</h3>
+                        </div>
+                        {order.status==0?<p>Order Confirmed</p>:
+                        order.status==1?<p>Item Shipped</p>:
+                        order.status==2?<p>Deliverd, Waiting for Review</p>:
+                        order.status==3?<p>Completed</p>:<></>
+                        }
+                    </div>
+                );
+            })}
             </div>
 
             <div className={DB.box}> 
             <div className={DB.boxHeader}>
                 <div className='horizontal'>
-                    <svg  viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"stroke-width="2" ><path d="m16.5 9.4-9-5.19M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.27 6.96 12 12.01l8.73-5.05M12 22.08V12"/></svg>
+                    <svg  viewBox="0 0 24 24" strokeWidth="2" ><path d="m16.5 9.4-9-5.19M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.27 6.96 12 12.01l8.73-5.05M12 22.08V12"/></svg>
                     <h1>Cart</h1>
                 </div>
                 <div className='horizontal'>
                     <h2>${total}</h2>
-                    <div className='button'>Buy</div>
-                    <div className='button'>Clear</div>
+                    <div className='button' onClick={()=>{setOrder(data.cart)}}>Buy</div>
+                    <div className='button' onClick={()=>{dropFromCart(-1)}}>Clear</div>
                 </div> 
             </div> 
             <div className='horizontal'>
@@ -148,14 +170,20 @@ export default function Dashboard(){
             <div className={DB.cartList}> 
             {data.cart.map((item,i)=>{
                 return(
-                    <CartItem {...item} id={i}  
+                    <CartItem {...item} key={i}  
                     remove={()=>{
                         dropFromCart(i);
+                    }}
+                    setOrder={()=>{
+                        setOrder([item]);
                     }}
                     changeCount={(c)=>{
                         let d=data.cart;
                         d[i].count=c;
-                        setData({cart:d});
+                        setData((d)={
+                            ...data,
+                            cart:d,
+                        });
                     }}/>
                     );
                 })}
@@ -170,7 +198,7 @@ export default function Dashboard(){
         </>
     );
 }
-const CartItem=({name,prize,image,changeCount,remove})=>{
+const CartItem=({name,prize,image,changeCount,remove,setOrder})=>{
     const [num,setNum]=useState(1);
     useEffect(()=>{
         changeCount(num);
@@ -181,7 +209,7 @@ const CartItem=({name,prize,image,changeCount,remove})=>{
             <h1>{name}</h1>
             <h3>${prize}</h3>
             <NumInput num={num} setNum={setNum}/>
-            <div className='button'>Buy Now</div>
+            <div className='button' onClick={setOrder}>Buy Now</div>
             <div className='button' onClick={remove}>Delete</div>
         </div>
     );

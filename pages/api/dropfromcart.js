@@ -14,12 +14,19 @@ export default async function handler(req, res) {
         let userRef=db.collection('users').doc(uid);
         userRef.get().then(async(snap)=>{
           if(snap.exists){
-            //finding cart element to be removed
-            let el=snap.data().cart[index];
-            //remove element
-            await userRef.update({
+            if(index!=-1){
+              //finding cart element to be removed
+              let el=snap.data().cart[index];
+              //remove element
+              await userRef.update({
               cart:FieldValue.arrayRemove(el)
-            });
+              });
+          }else{
+            //delete all elements
+            await userRef.update({
+              cart:[]
+              });
+          }
           }
         }).catch(e=>{});
         res.status(200).json({error:false,data:null});
