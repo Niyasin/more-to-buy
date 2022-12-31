@@ -8,6 +8,7 @@ export default function Dashboard(){
     const [user,setUser]=useState(null);
     const[products,setProducts]=useState([]);
     const[addMode,setAddMode]=useState(true);
+    const[selected,setSelected]=useState(false);
     const[imgURL,setImgURL]=useState([]);
     const[data,setData]=useState({
         name:null,
@@ -16,7 +17,6 @@ export default function Dashboard(){
         details:null,
         images:[],
     });
-
     const app=initFireBase();
     const auth = getAuth(app);
     const storage =getStorage(app);
@@ -65,7 +65,44 @@ export default function Dashboard(){
         })
     });
     }
-    
+    const update=()=>{
+        if(Object.keys(data).length){
+
+            let xhr=new XMLHttpRequest();
+            xhr.open('POST','/api/admin/updateproduct');
+            xhr.setRequestHeader('Content-Type','application/json');
+            xhr.send(JSON.stringify({
+                uid:auth.currentUser.uid,
+                token:auth.currentUser.accessToken,
+                data:{...data,id:selected.id},
+            }));
+            xhr.onload=()=>{
+                let res=JSON.parse(xhr.responseText);
+                if(!res.error){
+                    loadProduct(selected.id);
+                    loadProducts();
+                }
+            }
+        }
+    }
+    const loadProduct=(id)=>{
+        let xhr=new XMLHttpRequest();
+        xhr.open('POST','/api/admin/getdata');
+        xhr.setRequestHeader('Content-Type','application/json');
+        xhr.send(JSON.stringify({
+            uid:auth.currentUser.uid,
+            token:auth.currentUser.accessToken,
+            data:id,
+        }));
+        xhr.onload=()=>{
+            let res=JSON.parse(xhr.responseText);
+            if(!res.error){
+                setAddMode(false);
+                setData({});
+                setSelected(res.data);
+            }
+        }
+    }
     const loadProducts=()=>{
         let xhr=new XMLHttpRequest();
         xhr.open('POST','/api/admin/loadproducts');
@@ -103,7 +140,6 @@ export default function Dashboard(){
         IN.click();
     }
     return(
-        
         <div className={DB.container}>
             <div className={DB.box}>
                 {addMode?<>
@@ -140,20 +176,51 @@ export default function Dashboard(){
                     setAddMode(false);
                     setImgURL([]);
                     }}>Cancel</div>
-                </div>            
+                </div>          
                 </>:<>
+                {selected?<>
+                    <div className='horizontal  wide'>
+                    <h1>{selected.name}</h1>
+                </div>
+                <input placeholder='Name' onChange={(e)=>{setData({...data,name:e.target.value})}} defaultValue={selected.name}/>
+                <input placeholder='Price' onChange={(e)=>{setData({...data,prize:e.target.value})}} defaultValue={selected.prize}/>
+                <input placeholder='Stock' onChange={(e)=>{setData({...data,stock:e.target.value})}} defaultValue={selected.stock}/>
+                <textarea placeholder='Details' onChange={(e)=>{setData({...data,details:e.target.value})}} defaultValue={selected.description}></textarea>
+                <div className={DB.galleryItems}>
+                {selected.images.map((e,i)=>{
+                    return(
+                        <img src={e} key={i}/>
+                    )
+                })
+                }
+                </div>    
+                <div className='horizontal'>
+                <div className='button' onClick={update}>Update</div>
+                <div className='button' onClick={()=>{loadProduct(selected.id)}}>Cancel</div>
+                </div>
+                </>:<></>}
                 
                 </>}
             </div>
             <div className={DB.box}>
                 <div className='horizontal wide'>
                 <h1>Products</h1>
-                <div className='button' onClick={()=>{setAddMode(true)}}>Add</div>
+                <div className='button' onClick={()=>{
+                    setAddMode(true);
+                    setSelected(null);
+                    setData({
+                        name:null,
+                        prize:null,
+                        stock:null,
+                        details:null,
+                        images:[],
+                        });
+                    }}>Add</div>
                 </div>
             <div className={DB.list}>
             {products.map((e,i)=>{
                 return(
-                    <div className={DB.listItem} key={i}>
+                    <div className={DB.listItem} key={i} onClick={()=>{loadProduct(e.id)}}>
                         <img src={e.image}/>
                         <h4>{e.name}</h4>
                         <h3>${e.prize}</h3>
@@ -169,20 +236,5 @@ export default function Dashboard(){
             <Nav user={user} />
         </div>
     
-    );
-}
-const CartItem=({name,prize,image,changeCount,remove,setOrder})=>{
-    const [num,setNum]=useState(1);
-    useEffect(()=>{
-        changeCount(num);
-    },[num])
-    return(
-        <div className={DB.cartItem}>
-            <img src={image}/>
-            <h1>{name}</h1>
-            <h3>${prize}</h3>
-            <div className='button'>Buy Now</div>
-            <div className='button' >Delete</div>
-        </div>
     );
 }
