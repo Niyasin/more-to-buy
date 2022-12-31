@@ -65,6 +65,24 @@ export default function Dashboard(){
         })
     });
     }
+    const deleteProduct=()=>{
+            let xhr=new XMLHttpRequest();
+            xhr.open('POST','/api/admin/deleteproduct');
+            xhr.setRequestHeader('Content-Type','application/json');
+            xhr.send(JSON.stringify({
+                uid:auth.currentUser.uid,
+                token:auth.currentUser.accessToken,
+                data:selected.id,
+            }));
+            xhr.onload=()=>{
+                let res=JSON.parse(xhr.responseText);
+                if(!res.error){
+                    setSelected(false)
+                    setData({});
+                    loadProducts();
+                }
+            }
+    }
     const update=()=>{
         if(Object.keys(data).length){
 
@@ -80,6 +98,7 @@ export default function Dashboard(){
                 let res=JSON.parse(xhr.responseText);
                 if(!res.error){
                     loadProduct(selected.id);
+                    setData({});
                     loadProducts();
                 }
             }
@@ -181,6 +200,7 @@ export default function Dashboard(){
                 {selected?<>
                     <div className='horizontal  wide'>
                     <h1>{selected.name}</h1>
+                    <Switch state={selected.status} set={(s)=>{setSelected({...selected,status:s});setData({...data,status:s})}}/>
                 </div>
                 <input placeholder='Name' onChange={(e)=>{setData({...data,name:e.target.value})}} defaultValue={selected.name}/>
                 <input placeholder='Price' onChange={(e)=>{setData({...data,prize:e.target.value})}} defaultValue={selected.prize}/>
@@ -197,6 +217,7 @@ export default function Dashboard(){
                 <div className='horizontal'>
                 <div className='button' onClick={update}>Update</div>
                 <div className='button' onClick={()=>{loadProduct(selected.id)}}>Cancel</div>
+                <div className='button' onClick={deleteProduct}>Delete</div>
                 </div>
                 </>:<></>}
                 
@@ -237,4 +258,13 @@ export default function Dashboard(){
         </div>
     
     );
+}
+const Switch=({state,set})=>{
+    return(
+        <div className={state?'switch on':'switch off'} onClick={()=>{state?set(false):set(true)}}>
+            <div className={state?'on':'off'}>
+                
+            </div>
+        </div>
+    )
 }
