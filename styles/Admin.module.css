@@ -49,6 +49,11 @@
     border: 1px solid #aaa;
     outline: none;
 }
+.box input[type=checkbox]{
+    width:20px;
+    height:20px;
+}
+
 .box textarea{
     width: 800px;
     height: 400px;
@@ -179,4 +184,73 @@
   .galleryItems img:hover ,.galleryItems svg:hover{
     background: rgba(0, 0, 0, 0.214);
   }
- 
+.wrap{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin:10% 0;
+    font-size: 25px;
+    color: #777;
+}
+.wrap p{
+    font-size: 30px;
+    letter-spacing:3px;
+    padding-bottom: 10px;
+    line-height: 30px;
+}
+    
+.wrap span{
+    color: #333;
+    font-size: 100px;
+    line-height: 100px;
+    font-weight: bold;
+}
+
+.A{
+    margin: 5% 0;
+    display: flex;
+    flex-direction: column;
+}
+.A h1{
+    margin: 15px 0;
+}
+
+.chart{
+    width: 300px;
+    height: 300px;
+    border-radius: 300px;
+    background: rgb(228, 228, 228);
+    position: relative;
+    overflow: hidden;
+}
+
+.chartProgress{
+    width: 300px;
+    height: 300px;
+    position: absolute;
+}
+
+.chart >*:last-child{
+    position: absolute;
+    transform: translate(25px,25px);
+    width: 250px;
+    height: 250px;
+    border-radius: 300px;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+.chart >*:last-child h1{
+    font-size: 50px;
+    margin: 0;
+}
+
+.notification{
+    width: 100%;
+    padding:4% 2%;
+    border-radius: 10px;
+    box-sizing: border-box;
+    background: #eee;
+}

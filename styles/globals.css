@@ -54,6 +54,10 @@ h4{
   width: 100%;
 
 }
+.horizontal.evenly{
+  justify-content: space-evenly;
+
+}
 .horizontal svg{
   max-width:40px;
   max-height: 40px;
@@ -143,7 +147,6 @@ h4{
 .switch div.on{
   transform: translateX(30px);
 }
-
 
 
 

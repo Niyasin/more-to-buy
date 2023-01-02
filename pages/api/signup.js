@@ -17,7 +17,7 @@ export default async function handler(req, res) {
         uid:uid,
         email:email,
         address:null,
-        phonenumer:null,
+        phone:null,
         orders:[],
         cart:[],
       });
