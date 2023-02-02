@@ -16,6 +16,9 @@ export default async function handler(req, res) {
             let userdata=snapshot.data();
             //reference cart array
             let data=[];
+            if(userdata.wishlist.length==0){
+              res.status(200).json({error:false,data:data});
+            }
             userdata.wishlist.forEach(e=>{
               db.collection('products').doc(e).get().then((p)=>{
                 let product =p.data();
