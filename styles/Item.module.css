@@ -13,8 +13,6 @@
   }
   .gallery{
     grid-area: b;
-    width: 100%;
-    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
@@ -22,8 +20,6 @@
     background:#fff;
     border-radius:15px;
     position: relative;
-
-
   }
   .details{
     grid-area: c;
@@ -44,17 +40,12 @@
     word-wrap:break-word;
   }
   .preview{
-    flex-grow: 1;
+    /* flex-grow: 1; */
     width:max-content;
     height:max-content;
+    max-width:100%;
+    max-width:70%;
     position: relative;
-  }
-  .preview img{
-    flex-grow: 1;
-    width:max-content;
-    height:max-content;
-    position: relative;
-    object-fit: contain;
   }
   .like{
     position: absolute;

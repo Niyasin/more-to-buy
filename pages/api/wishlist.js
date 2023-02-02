@@ -21,17 +21,19 @@ export default async function handler(req, res) {
             }
             userdata.wishlist.forEach(e=>{
               db.collection('products').doc(e).get().then((p)=>{
-                let product =p.data();
-                data.push({
-                  id:p.id,
-                  name:product.name,
-                  prize:product.prize,
-                  status:product.status,
-                  image:product.images[0],
-                });
-                if(data.length==userdata.wishlist.length){
-                  res.status(200).json({error:false,data:data});
+                if(p.exists){
+                  let product =p.data();
+                  data.push({
+                    id:p.id,
+                    name:product.name,
+                    prize:product.prize,
+                    status:product.status,
+                    image:product.images[0],
+                  });
                 }
+                  if(data.length==userdata.wishlist.length){
+                    res.status(200).json({error:false,data:data});
+                  }
               }).catch(e=>{})
             });
          }   
