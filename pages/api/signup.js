@@ -20,6 +20,7 @@ export default async function handler(req, res) {
         phone:null,
         orders:[],
         cart:[],
+        wishlist:[],
       });
     }
     res.status(200).json(req.body);

@@ -15,6 +15,7 @@ export default async function handler(req, res) {
               ...data,
               rating:0,
               review:[],
+              status:true,
             });
         res.status(200).json({error:false,data:null});
       }}).catch(e=>{
