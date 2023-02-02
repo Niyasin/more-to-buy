@@ -17,19 +17,20 @@ export default async function handler(req, res) {
             //reference cart array
             let data=[];
             userdata.wishlist.forEach(e=>{
-              e.get().then((product)=>{
+              db.collection('products').doc(e).get().then((p)=>{
+                let product =p.data();
                 data.push({
-                  id:product.id,
+                  id:p.id,
                   name:product.name,
                   prize:product.prize,
                   status:product.status,
                   image:product.images[0],
                 });
+                if(data.length==userdata.wishlist.length){
+                  res.status(200).json({error:false,data:data});
+                }
               }).catch(e=>{})
             });
-            res.status(200).json({error:false,data:data});
-            
-            
          }   
         });
       }else{

@@ -42,7 +42,7 @@ export default function Home() {
   },[]);
   useEffect(()=>{
     if(user){loadData();}
-  },[user])
+  },[user]);
 
   const loadData=async ()=>{
     if(user){
@@ -77,8 +77,13 @@ export default function Home() {
         <div className='button' onClick={()=>{}}>Search</div>
         <img className={home.profilepic} src={user.profilepic}/>
       </div>
-      
-      
+      <div className={home.products}>
+        {items.map(p=>{
+          return(
+            <Item item={p}/>
+          )
+        })}
+      </div>
       </div>
       :
       <LoginPopup/>
@@ -96,49 +101,3 @@ const Item =({item})=>{
   )
 }
 
-const Slider =()=>{
-  const [value,setValue]=useState(10);
-  return(
-    <div className='horizontal'>
-      <input type='range'step={100} min={10} max={1000} onChange={e=>{setValue(e.target.value)}}/>
-      <h3>${value}</h3>
-    </div>
-  )
-}
-
-const TagSelector =({tags,name})=>{
-  const [selected,setSelected]=useState([]);
-  return(
-  <div className='filter'>
-    <div className='horizontal'>
-    <h1>{name}</h1>
-    <div className='iconButton' onClick={()=>{setSelected([])}}>
-      {selected.length?<svg viewBox="0 0 24 24"><path fill="none" stroke="#666" stroke-width="3" d="m3 3 18 18M3 21 21 3"/></svg>:''}
-    </div>
-    </div>
-  <div className='tags'>
-    {tags.map(t=>{
-      let c;
-      if(selected.includes(t)){
-        c='tag selectedTag'
-      }else{
-        c='tag';
-      }
-      return(
-        <div
-        className={c} 
-        onClick={()=>{
-            let i=selected.indexOf(t);
-            if(i!=-1){
-              setSelected(selected.filter(e=>{return(e!=t)}));
-            }else{
-              setSelected(selected.concat(t));
-            }
-          }}
-          >{t}</div>  
-          )
-        })}
-  </div>
-  </div>
-  );
-  }

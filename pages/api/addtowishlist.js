@@ -10,7 +10,6 @@ export default async function handler(req, res) {
     .then(async(decoded)=>{
       if(decoded.uid==uid){
         //fetching user data;
-        console.log("HELLO");
         let userRef=db.collection('users').doc(uid);
         await userRef.update({
           wishlist:FieldValue.arrayUnion(productID)

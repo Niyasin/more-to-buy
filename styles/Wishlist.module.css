@@ -44,3 +44,12 @@
   font-size:18px;
   padding: 0 1%;
  }
+ .products{
+  grid-area:d;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(5,1fr);
+  grid-template-rows: repeat(10,1fr);
+  overflow-y: scroll;
+  gap:3%;
+ }
