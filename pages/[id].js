@@ -1,16 +1,20 @@
-import { collection, doc, getDoc, getFirestore } from "firebase/firestore";
+import { doc, getDoc, getFirestore } from "firebase/firestore";
+import { initFireBase} from "../firebase/client";
+
+import {getFirestore as getServerFirestore}from 'firebase-admin/firestore'
+import { app as serverApp } from "../firebase/server";
+
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react";
 import Loading from '../Loading';
-import { initFireBase} from "../firebase/client";
 import { getAuth } from "firebase/auth";
 import I from'../styles/Item.module.css';
 import Nav from "../Nav";
-export default function Item (){
+export default function Item ({data}){
     const router = useRouter();
+    const [liked,like]=useState(false);
     const { id }=router.query;
     const [user,setUser]=useState(null);
-    const [data,setData]=useState(null);
     const [selectedImage,setSelectedImages]=useState(0);
     const app=initFireBase();
     const db = getFirestore(app);
@@ -59,33 +63,38 @@ export default function Item (){
       }
     }
 
-    const loadData=async()=>{
-        try{
-            if(id){
-                let ref=doc(db,'products',id);
-                let snap= await getDoc(ref);
-                console.log(snap.data());
-                if(snap.exists){
-                    setData(snap.data());
-                }
-            } 
-        }catch(e){}
+    const addToWishlist=async ()=>{
+      if(user){
+        let token=await auth.currentUser.getIdToken();
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST','/api/addtowishlist');
+        xhr.setRequestHeader('Content-Type','application/json');
+        xhr.send(JSON.stringify({
+          uid:user.uid,
+          token:token,
+          productID:id,
+        }));
+        xhr.onload=()=>{
+          let d=JSON.parse(xhr.responseText);
+          if(!d.error){
+            like(true);
+          }
+        }
+      }
     }
-    useEffect(()=>{
-        loadData();
-    },[id]);
 return(<>
     {data?
     <div className={I.container}>
         <Nav user={user} signout={signout}/>
         <div className={I.gallery}>
-            <img className={I.preview} src={data.images[selectedImage]}/>
+              <img className={I.preview} src={data.images[selectedImage]}/>
+              <div className={I.like} title="Add To Wishlist" onClick={addToWishlist}><svg viewBox="0 0 24 24" style={liked?{fill:"#e0235c"}:{fill:"none"}}><path d="M22 9.075c0 1.645-.714 3.084-1.837 4.215l-7.653 7.504c-.204.103-.306.206-.51.206a.776.776 0 0 1-.51-.206l-7.653-7.607C2.714 12.057 2 10.514 2 8.87c0-1.542.714-2.98 1.837-4.112 1.224-1.13 2.755-1.85 4.387-1.747 1.327 0 2.551.514 3.572 1.336 2.449-1.953 5.918-1.747 8.163.514C21.286 5.888 22 7.43 22 9.075Z"/></svg></div>
             <div className={I.galleryItems}>
                 {data.images.map((i,id)=>{
-                    return(
-                        <img src={i} id={id} onClick={()=>{setSelectedImages(id)}} style={selectedImage==id?{border:"2px solid #000"}:{}}/>
+                  return(
+                    <img src={i} id={id} onClick={()=>{setSelectedImages(id)}} style={selectedImage==id?{border:"2px solid #000"}:{}}/>
                     )
-                })}
+                  })}
             </div>
         </div>
         <div className={I.details}>
@@ -114,8 +123,20 @@ return(<>
     <Loading/>
     </>}
     </>
-)
+)}
+
+//SSR
+export const getServerSideProps= async ({params})=>{
+  const db = getServerFirestore(serverApp);
+  if(params.id){
+    let ref=db.collection('products').doc(params.id);
+    let snap= await ref.get();
+    if(snap.exists){
+      return({props:{data:snap.data()}});
+    }
 }
+}
+
 const Review =({data})=>{
     return(
         <div className={I.review}>

@@ -21,12 +21,13 @@
     align-items: center;
     background:#fff;
     border-radius:15px;
+    position: relative;
 
 
   }
   .details{
     grid-area: c;
-    width: fit-content;
+    /* width: fit-content; */
     padding: 1% 3%;
     height: initial;
     display: flex;
@@ -34,16 +35,49 @@
     align-items:flex-start;
     gap:20px;
     overflow-y: scroll;
+    overflow-x: hidden;
     background:#fff;
     border-radius:15px;
+  }
+  .details p{
+    max-width: inherit;
+    word-wrap:break-word;
   }
   .preview{
     flex-grow: 1;
     width:max-content;
     height:max-content;
     position: relative;
+  }
+  .preview img{
+    flex-grow: 1;
+    width:max-content;
+    height:max-content;
+    position: relative;
     object-fit: contain;
   }
+  .like{
+    position: absolute;
+    right:30px;
+    top:30px;
+    padding:2px;
+    width:40px;
+    height: 40px;
+    border-radius:50px;
+  }
+  .like svg{
+    stroke: #e0235c;
+    fill: none;
+    transition:0.1s;
+  }
+  .like:hover svg{
+    transform: scale(0.95); 
+  }
+  .like:active svg{
+    transform: scale(1.2);
+  }
+  
+
   .galleryItems{
     width: 100%;
     height: 20%;
@@ -95,4 +129,3 @@
     width: 180px;
     height: 35px;
   }
-  
