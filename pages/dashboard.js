@@ -11,6 +11,9 @@ export default function Dashboard(){
     const [total,setTotal]=useState(0);
     const [order,setOrder]=useState(false);
     const [edit,setEdit]=useState(false);
+    const [review,setReview]=useState(false);
+    const [rating,setRating]=useState(0);
+    const [reviewText,setReviewText]=useState('');
     const [address,setAddress]=useState(null);
     const [phone,setPhone]=useState(null);
     const [data,setData]=useState({
@@ -96,6 +99,28 @@ export default function Dashboard(){
         }  
     }
 
+    const sendReview=async ()=>{
+        if(user && address.length && phone.length){
+            let token=await auth.currentUser.getIdToken();
+            let xhr =new XMLHttpRequest();
+            xhr.open('POST','/api/review');
+            xhr.setRequestHeader('Content-Type','application/json');
+            xhr.send(JSON.stringify({
+                uid:user.uid,
+                token:token,
+                order:review.orderID,
+                review:reviewText || '',
+                rating:rating || 5,
+            }));
+            xhr.onload=()=>{
+                let d=JSON.parse(xhr.responseText);
+                if(!d.error){
+                    setReview(false);
+                    loadData();
+                }
+            }
+        }  
+    }
   //firebase
   const app=initFireBase();
   const db =getFirestore(app);
@@ -137,6 +162,25 @@ export default function Dashboard(){
 
     return(
         <>
+        {review?<div className={DB.editWrap}>
+            <div className={DB.ratingPopup}>
+                <div>
+                    <img src={review.image}/>
+                    <h2>{review.name}</h2>
+                    <h3>${review.prize}</h3>
+                </div>
+                <div>
+                    <h2>Rating And Review</h2>
+                    <Rating value={rating} setValue={setRating}/>
+                    <textarea rows={8} placeholder='Review' defaultValue={reviewText} spellCheck={false} onChange={(e)=>{setReviewText(e.target.value)}}/>
+                    <div className='horizontal'>
+                        <div className='button' onClick={sendReview}>Confirm</div>
+                        <div className='button' onClick={()=>{setReviewText(null);setRating(null);setReview(false);}}>Cancel</div>
+                    </div>
+                </div>
+            </div>
+        </div>:<></>}
+
         {edit?<div className={DB.editWrap}>
             <div className={DB.box}>
             <div className='horizontal'>
@@ -178,20 +222,26 @@ export default function Dashboard(){
             <svg  viewBox="0 0 24 24" strokeWidth="2" ><path d="m16.5 9.4-9-5.19M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.27 6.96 12 12.01l8.73-5.05M12 22.08V12"/></svg>
             <h1>Status</h1>
             </div>
-            <p>{data.orders.length} Active Orders</p>
+            <p>{data.orders.filter(e=>{if(e.status<3){return true}else{return false}}).length} Active Orders</p>
             {data.orders.map((order)=>{
-                return(
-                    <div className={DB.order}>
-                        <div className='horizontal'>
-                            <h4>{order.name}</h4>
-                            <h3>${order.prize*order.count}</h3>
+                return(<>
+                    {order.status<3?
+                        <div className={DB.order} onClick={()=>{if(order.status==2){setReview(order);}}}>
+                            <img src={order.image}/>
+                            <div>
+                              
+                                    <h4>{order.name}</h4>
+                                    <h3>${order.prize*order.count}</h3>
+                                
+                                {order.status==0?<p>Order Confirmed</p>:
+                                order.status==1?<p>Item Shipped</p>:
+                                order.status==2?<p>Deliverd, Waiting for Review</p>:
+                                order.status==3?<p>Completed</p>:<></>
+                                }
+                            </div>
                         </div>
-                        {order.status==0?<p>Order Confirmed</p>:
-                        order.status==1?<p>Item Shipped</p>:
-                        order.status==2?<p>Deliverd, Waiting for Review</p>:
-                        order.status==3?<p>Completed</p>:<></>
-                        }
-                    </div>
+                    :<></>}
+                    </>
                 );
             })}
             </div>
@@ -265,5 +315,24 @@ const NumInput=(prop)=>{
             <div>{prop.num}</div>
             <div onClick={()=>{prop.setNum(prop.num+1)}}>+</div>
         </div>
+    )
+}
+
+const Rating=({value=0,setValue})=>{
+    const [color,setColor]=useState('#fff');
+    useEffect(()=>{
+        if(value<3){setColor('#F48225')}
+        else if(value<5){setColor('#FFCC01')}
+        else{setColor('#5EBA7D')}
+    },[value]);
+    return(
+    <div className={DB.rating}>
+    <h4>{value}</h4>
+    {[1,2,3,4,5].map((e)=>{
+        return(
+    <svg onClick={()=>{setValue(e)}} fill={value>e-1?color:'#fff'} viewBox="0 0 24 24"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        )
+    })}
+    </div>
     )
 }

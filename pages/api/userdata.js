@@ -63,9 +63,11 @@ export default async function handler(req, res) {
                 order.productID.get().then((productsnap)=>{
                   let product=productsnap.data();
                   orders.push({
+                    orderID:e.id,
                     productID:productsnap.id,
                     name:product.name,
                     prize:order.prize,
+                    image:product.images[0],
                     count:order.count,
                     status:order.status,
                   });

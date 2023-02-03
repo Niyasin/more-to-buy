@@ -132,7 +132,8 @@ export const getServerSideProps= async ({params})=>{
     let ref=db.collection('products').doc(params.id);
     let snap= await ref.get();
     if(snap.exists){
-      return({props:{data:snap.data()}});
+      let data=snap.data()
+      return({props:{data:data}});
     }
 }
 }
@@ -142,38 +143,25 @@ const Review =({data})=>{
         <div className={I.review}>
             <h4>{data.name}</h4>
             <p>{data.text}</p>
+            <Rating value={data.rating}/>
         </div>
     )
 }
 const Rating=({value})=>{
-    return(
-        
-        <div className="horizontal">
-            <h4>{value}</h4>
-            <svg viewBox='0 0 881 130' fill='#eee' width="200px" className="ratingStars">
-    <clipPath id='Clip'>
-      <rect width={value*(881/5)} height={130} />
-    </clipPath>
-    <g id='stars'>
-      <g transform='matrix(1,0,0,1,-634.728,-382.568)'>
-        <path d='M702.68,382.568L718.721,431.938L770.632,431.938L728.635,462.45L744.677,511.82L702.68,481.308L660.683,511.82L676.724,462.45L634.728,431.938L686.639,431.938L702.68,382.568Z' />
-      </g>
-      <g transform='matrix(1,0,0,1,-447.914,-382.568)'>
-        <path d='M702.68,382.568L718.721,431.938L770.632,431.938L728.635,462.45L744.677,511.82L702.68,481.308L660.683,511.82L676.724,462.45L634.728,431.938L686.639,431.938L702.68,382.568Z' />
-      </g>
-      <g transform='matrix(1,0,0,1,-261.961,-382.568)'>
-        <path d='M702.68,382.568L718.721,431.938L770.632,431.938L728.635,462.45L744.677,511.82L702.68,481.308L660.683,511.82L676.724,462.45L634.728,431.938L686.639,431.938L702.68,382.568Z' />
-      </g>
-      <g transform='matrix(1,0,0,1,-76.0238,-382.568)'>
-        <path d='M702.68,382.568L718.721,431.938L770.632,431.938L728.635,462.45L744.677,511.82L702.68,481.308L660.683,511.82L676.724,462.45L634.728,431.938L686.639,431.938L702.68,382.568Z' />
-      </g>
-      <g transform='matrix(1,0,0,1,109.853,-382.568)'>
-        <path d='M702.68,382.568L718.721,431.938L770.632,431.938L728.635,462.45L744.677,511.82L702.68,481.308L660.683,511.82L676.724,462.45L634.728,431.938L686.639,431.938L702.68,382.568Z' />
-      </g>
-    </g>
-    <use clipPath='url(#Clip)' href='#stars' fill='rgb(255,216,0)' />
-  </svg>
-
-        </div>
-    )
+  const [color,setColor]=useState('#fff');
+  useEffect(()=>{
+      if(value<3){setColor('#F48225')}
+      else if(value<5){setColor('#FFCC01')}
+      else{setColor('#5EBA7D')}
+  },[value]);
+  return(
+  <div className={I.rating}>
+  <h4>{value}</h4>
+  {[1,2,3,4,5].map((e)=>{
+      return(
+  <svg fill={value>e-1?color:'#fff'} viewBox="0 0 24 24"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      )
+  })}
+  </div>
+  )
 }
