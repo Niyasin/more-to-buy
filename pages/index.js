@@ -12,6 +12,23 @@ export default function Home() {
   //states
   const [user,setUser]=useState(null);
   const [items,setItems]=useState([]);
+  const [searchResult,setSearchResult]=useState([]);
+  const [search,setSearch]=useState("");
+
+  useEffect(()=>{
+    if(search.length>0){
+      let result=items.filter((e)=>{
+        if(e.name.search(search)>=0){
+          return true
+        }else{
+          return false
+        }
+      });
+      setSearchResult(result);
+    }else{
+      setSearchResult([]);
+    }
+  },[search]);
   
   
   //firebase
@@ -72,22 +89,39 @@ export default function Home() {
       {lgPopup?<LoginPopup toggle={toggleLoginPopup}/>:<></>}
       <Nav user={user} signout={signout} login={toggleLoginPopup}/>
       <div className={home.header}>
-        <input type="text" className={home.input} placeholder='Search'/>
-        <div className='button' onClick={()=>{}}>Search</div>
+        <input type="text" className={home.input} onChange={(e)=>{setSearch(e.target.value)}} placeholder='Search'/>
         {user?
         <img className={home.profilepic} src={user.profilepic}/>
         :
         <div className='button' onClick={toggleLoginPopup}>Login</div>
         }
       </div>
+      <div className={home.content}>
+
+      {search.length?
+      <>
+      <h4>Result for ' {search} '</h4>
+      <div className={home.searchResult}>
+        {searchResult.map(p=>{
+          return(
+            <Item item={p}/>
+            )
+          })}
+        {searchResult.length==0?<h4>No Item Found</h4>:<></>}
+      </div>
+      <h4>Explore More Products</h4>
+      </>
+      :<>
+      </>}
       <div className={home.products}>
         {items.map(p=>{
           return(
             <Item item={p}/>
-          )
-        })}
+            )
+          })}
       </div>
       
+      </div>
     </div>
   );
 }

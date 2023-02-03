@@ -13,15 +13,30 @@
   box-sizing: border-box;
   background: #e8e6e6;
  }
-
- .products{
+ .content{
   grid-area:d;
+  gap:3%;
+  overflow-y: scroll;
+}
+.content h4{
+  color: #888;
+  margin:2% 0;
+}
+ .products{
   height: 100%;
-  padding-top:1%;
+  margin:1% 0;
   display: grid;
   grid-template-columns: repeat(5,1fr);
   grid-template-rows: repeat(10,1fr);
-  overflow-y: scroll;
+  gap:3%;
+ }
+
+ .searchResult{
+  width:100%;
+  height:fit-content;
+  margin:1% 0;
+  display: grid;
+  grid-template-columns: repeat(5,1fr);
   gap:3%;
  }
  .header{
@@ -38,10 +53,11 @@
   justify-content: flex-start;
   padding: 0 1%;
  }
- .header>:nth-child(3){
-  justify-self: right;
- }
- .profilepic{
+ .header>:nth-child(2){
+   position: absolute;
+   right:50px;
+}
+.profilepic{
   width: 50px;
   border-radius: 50px;
  }
@@ -54,4 +70,5 @@
   border-radius: 10px;
   font-size:18px;
   padding: 0 1%;
+  outline: none;
  }
