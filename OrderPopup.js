@@ -1,6 +1,6 @@
 import { useState ,useEffect} from 'react';
 import DB from './styles/OrderPopup.module.css';
-export default function OrderPopup({item=[],data,setOrder,delivery,user}){
+export default function OrderPopup({item=[],data,setOrder,delivery,user,setEdit}){
     const [total,setTotal]=useState(0);
     const [cart,setCart]=useState(item);
     const [payment,setPayment]=useState(0);
@@ -72,7 +72,7 @@ export default function OrderPopup({item=[],data,setOrder,delivery,user}){
             <div className={DB.box}>
             <div className='horizontal  wide'>
             <h4>Address</h4>
-            <div className='button'>Edit</div>
+            <div className='button'onClick={()=>{setEdit(true)}} >Edit</div>
             </div>
             <p>
             <div className='horizontal  wide'>

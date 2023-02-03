@@ -148,3 +148,25 @@
 .numberInput div:hover{
     background: #ddd;
 }
+.editWrap{
+    position:absolute;
+    width: 100vw;
+    height: 100vh;
+    background:#00000084;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 200;
+}
+.editWrap textarea,.editWrap input{
+    resize: none;
+    width: 500px;
+    font-size: 20px;
+    padding: 1%;
+    margin: 10px 0;
+    outline: none;
+ }
+ .editWrap h4{
+    margin: 0 0;
+    font-size: 20px;
+ }

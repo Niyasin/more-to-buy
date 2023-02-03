@@ -10,6 +10,9 @@ export default function Dashboard(){
     const [user,setUser]=useState(null);
     const [total,setTotal]=useState(0);
     const [order,setOrder]=useState(false);
+    const [edit,setEdit]=useState(false);
+    const [address,setAddress]=useState(null);
+    const [phone,setPhone]=useState(null);
     const [data,setData]=useState({
         username:null,
         email:null,
@@ -49,7 +52,7 @@ export default function Dashboard(){
           }
         }
       }
-      useEffect(()=>{},[data.address])
+      useEffect(()=>{setAddress(data.address);setPhone(data.phone)},[data]);
     const loadData=async ()=>{
         if(user){
             let token=await auth.currentUser.getIdToken();
@@ -65,6 +68,29 @@ export default function Dashboard(){
                 if(!d.error){
                     setData({...d.data,token});
                     console.log(d.data.cart);
+                }
+            }
+        }  
+    }
+
+
+    const editContact=async ()=>{
+        if(user && address.length && phone.length){
+            let token=await auth.currentUser.getIdToken();
+            let xhr =new XMLHttpRequest();
+            xhr.open('POST','/api/editcontact');
+            xhr.setRequestHeader('Content-Type','application/json');
+            xhr.send(JSON.stringify({
+                uid:user.uid,
+                token:token,
+                address,
+                phone,
+            }));
+            xhr.onload=()=>{
+                let d=JSON.parse(xhr.responseText);
+                if(!d.error){
+                    setEdit(false);
+                    loadData();
                 }
             }
         }  
@@ -111,9 +137,26 @@ export default function Dashboard(){
 
     return(
         <>
+        {edit?<div className={DB.editWrap}>
+            <div className={DB.box}>
+            <div className='horizontal'>
+                <svg viewBox="0 0 24 24" strokeWidth="2"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                    <h2>Edit</h2>
+                </div>
+                <h4>Phone</h4>
+                <input type="tel" placeholder='Phone' defaultValue={data.phone} onChange={(e)=>{setPhone(e.target.value)}}/>
+                <h4>Address</h4>
+                <textarea rows={3} placeholder='Address' defaultValue={data.address} spellCheck={false} onChange={(e)=>{setAddress(e.target.value)}}/>
+                <div className='horizontal'>
+                    <div className='button' onClick={editContact}>Confirm</div>
+                    <div className='button' onClick={()=>{setAddress(null);setPhone(null);setEdit(false);}}>Cancel</div>
+                </div>
+            </div>
+        </div>:<></>}
+    
         {user?
         <div className={DB.container}>
-            {order && data.cart.length>0?<OrderPopup user={user} data={data} item={order} setOrder={setOrder}/>:<></>}
+            {order && data.cart.length>0?<OrderPopup user={user} data={data} item={order} setOrder={setOrder} setEdit={setEdit}/>:<></>}
             <div className={DB.box}> 
             <div className='horizontal'>
             <img src={user.profilepic}/>
@@ -121,13 +164,13 @@ export default function Dashboard(){
             </div>
             <p>{user.email}</p>
             </div>
-
             <div className={DB.box}> 
             <div className='horizontal'>
             <svg viewBox="0 0 24 24"><path strokeWidth="2" d="M12 22s-8-6-8-12c0-5 4-8 8-8s8 3 8 8c0 6-8 12-8 12Zm0-9a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/></svg>
             <h1>Address</h1>
             </div>
             <p>{data.address}</p>
+            <div className='button' onClick={()=>{setEdit(true)}}>Edit</div>
             </div>
             
             <div className={DB.box}> 
