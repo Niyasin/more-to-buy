@@ -17,6 +17,7 @@ import {GoogleAuthProvider,signInWithPopup,getAuth} from 'firebase/auth'
         xhr.setRequestHeader('Content-Type','application/json');
         xhr.send(JSON.stringify({
           username:result.user.displayName,
+          token:auth.currentUser.getIdToken(),
           profilepic:result.user.photoURL,
           email:result.user.email,
           uid:result.user.uid,

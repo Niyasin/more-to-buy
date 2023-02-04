@@ -12,7 +12,6 @@ const ServiceAccount ={
   auth_provider_x509_cert_url:process.env.ADMIN_AUTH_PROVIDER_X509_CERT_URL,
   client_x509_cert_url:process.env.ADMIN_CLIENT_X509_CERT_URL,
 }
-console.log(ServiceAccount.private_key);
 try{
   getApp('server');
 }catch(e){
