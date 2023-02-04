@@ -13,23 +13,63 @@
   box-sizing: border-box;
   background: #e8e6e6;
  }
-
  .header{
   grid-area:b;
-  height: 100%;
   width:initial;
   background: #fff;
   border-radius:15px;
   display:grid;
   grid-auto-flow: column;
-  grid-template-columns: 1fr 1fr 10fr;
+  grid-template-columns: 10fr 30fr 6fr 1fr;
   gap:1%;
   align-items: center;
   justify-content: flex-start;
   padding: 0 1%;
  }
- .header>:nth-child(3){
-  justify-self: right;
+ .header div{
+  grid-column:4/5;
+ }
+ .header input{
+  grid-column:1/2;
+ }
+ .header img{
+  grid-column:4/5;
+ }
+.dropdown{
+  position: relative;
+  z-index: 50;
+  grid-column:3/4 !important;
+  cursor: pointer;
+}
+.dropdown:hover div{
+  display: flex;
+}
+.dropdown div{
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  padding: 5px;
+  border-radius: var(--radius);
+  z-index:5000;
+  position: absolute;
+  background: #FFF;
+  border: 0.5px solid #eee;
+}
+.dropdown div h2{
+  padding: 5px 30px;
+}
+.dropdown div h2:hover{
+  background: #0000000c;
+  border-radius: calc(var(--radius)/2);
+}
+
+.dropdown h2{
+  font-weight: 600;
+  font-size: 18px;
+}
+.profilepic{
+  width: 40px;
+  border-radius: 50px;
  }
  .profilepic{
   width: 50px;
@@ -52,4 +92,16 @@
   grid-template-rows: repeat(10,1fr);
   overflow-y: scroll;
   gap:3%;
+ }
+ .btn{
+  position: absolute;
+  font-size: 30px;
+  line-height: 30px;
+  width: 30px;
+  height: 30px;
+  color:#0000002b;
+  cursor: pointer;
+  user-select: none;
+  right:3px;
+  top: 3px;
  }

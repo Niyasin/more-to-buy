@@ -1,9 +1,24 @@
+:root{
+  --bg:#EEF3F7;
+  --bg2:#f2f2f2;
+  --primary:#333;
+  --secondary:#5c7978;
+  --tertiary:#B6DDDC;
+  --radius:20px;
+  --gap:20px;
+}
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family:'Open Sans';
+  font-family:Cairo;
+  background: var(--bg);
 }
+*{
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 h2,h3{
   line-height: 1em;
   padding: 0;
@@ -12,11 +27,11 @@ h2,h3{
 h2{
   font-size: 30px;
   line-height:30px;
-  color: #2b2b2b;
+  color: var(--primary);
 }
 h3{
-  font-size:2.5em;
-  color: #51ae1f;
+  font-size:1.5em;
+  color:var(--secondary);
 }
 
 h4{
@@ -25,33 +40,35 @@ h4{
 }
 
 .button{
-  background: #555;
+  border: 1px solid var(--primary);
   width: fit-content;
-  color: #fff;
-  padding: 10px 15px;
-  border-radius:5px;
-  font-weight: bold;
-  font-size:18px;
+  color: var(--primary);
+  padding: 8px 10px;
+  border-radius:calc(var(--radius)/4);
+  font-weight: 600;
   cursor: pointer;
   white-space:nowrap;
-  line-height:1em;
-  height: 1em;
+  font-size:18px;
+  line-height:0.8em;
+  height: 0.8em;
+  transition:0.05s;
 }
 
 .button:hover{
-  background: rgb(224, 176, 31);
+  background:var(--primary);
+  color: #fff;
 }
 
 .horizontal{
   display: flex;
   justify-content:flex-start;
-  margin: 10px 0;
   align-items: center;
   gap:5%;
 }
 
 .horizontal.wide{
   width: 100%;
+  gap:10%;
 
 }
 .horizontal.evenly{
@@ -65,14 +82,13 @@ h4{
 
 .item{
   padding: 0 5%;
-  aspect-ratio: 3/5;
   background: #fafcfa;
-  border-radius:10px;
   display: grid;
-  grid-template-areas:'i' 'n' 'p' 'd';
-  grid-template-rows: 5fr 1fr 1fr 2fr;
+  grid-template-areas:'i' 'n' 'p';
+  grid-template-rows: 5fr 1fr 1fr;
   transition: 0.2s;
   animation: popin 0.2s;
+  position: relative;
 }
 @keyframes popin{
   0%{transform: scale(0.95);opacity: 0.9;}
@@ -91,41 +107,11 @@ h4{
   transition: 0.1s;
 }
 .item:hover img{
+  z-index: 1000;
   transform: scale(1.2);
 }
-.filter svg{
-  width:30px;
-  cursor: pointer;
-}
-.iconButton{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin:2%;
-}
-.tags{
-  width:80%;
-  margin:0 5%;
-  display: flex;
-  justify-content:flex-start;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  gap:10px;
-}
-.tag{
-  cursor: pointer;
-  transition:0.2s;
-  font-size:25px;
-  user-select: none;
-  border: 1px solid #2b2b2b;
-  border-radius: 10px;
-  padding: 5px 10px;
-  width: fit-content;
-}
-.selectedTag{
-  background: #2b2b2b;
-  color: #fff;
-}
+
+
 .switch{
   width: 60px;
   height: 30px;
@@ -155,11 +141,4 @@ h4{
 }
 
 
-
-
-
-
-*{
-  /* border: 1px solid #6d0c3c; */
-}
 

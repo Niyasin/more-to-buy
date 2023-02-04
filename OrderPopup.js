@@ -38,7 +38,7 @@ export default function OrderPopup({item=[],data,setOrder,delivery,user,setEdit}
                 }
             }
         }else{
-            //addAddress;
+            setEdit(true);
         }
     }
     return(
@@ -49,10 +49,10 @@ export default function OrderPopup({item=[],data,setOrder,delivery,user,setEdit}
             <div className={DB.boxHeader}>
                 <div className='horizontal'>
                     <svg  viewBox="0 0 24 24" strokeWidth="2" ><path d="m16.5 9.4-9-5.19M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.27 6.96 12 12.01l8.73-5.05M12 22.08V12"/></svg>
-                    <h1>Confirm Order</h1>
+                    <h2>Confirm Order</h2>
                 </div>
                 <div className='horizontal'>
-                    <h2>${total}</h2>
+                    <h3>{total} USD</h3>
                 </div> 
             </div> 
 
@@ -69,40 +69,44 @@ export default function OrderPopup({item=[],data,setOrder,delivery,user,setEdit}
                 })}
                 </div>
             </div>
+            
             <div className={DB.box}>
+            <div>
             <div className='horizontal  wide'>
-            <h4>Address</h4>
-            <div className='button'onClick={()=>{setEdit(true)}} >Edit</div>
+                <h4>Address</h4>
+                <div className='button'onClick={()=>{setEdit(true)}} >Edit</div>
             </div>
-            <p>
-            <div className='horizontal  wide'>
-            <svg viewBox="0 0 24 24" ><path strokeWidth="2" d="M12 22s-8-6-8-12c0-5 4-8 8-8s8 3 8 8c0 6-8 12-8 12Zm0-9a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/></svg>
-            <p>{data.address}</p>
+            <div>
+                <div className='horizontal'>
+                    <svg viewBox="0 0 24 24" ><path strokeWidth="2" d="M12 22s-8-6-8-12c0-5 4-8 8-8s8 3 8 8c0 6-8 12-8 12Zm0-9a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/></svg>
+                    <p>{data.address}</p>
+                </div>
+                <div className='horizontal'>
+                    <svg viewBox="0 0 24 24"><path d="M20.489 20.011a4.273 4.273 0 0 1-3.241 1.489h-.116A15.042 15.042 0 0 1 2.5 6.868 4.28 4.28 0 0 1 4 3.494a4.028 4.028 0 0 1 3.349-.931 3.549 3.549 0 0 1 .474.119 1.492 1.492 0 0 1 1 1.191l.67 4.254a1.515 1.515 0 0 1-.541 1.412 3.608 3.608 0 0 1-.262.193.538.538 0 0 0-.215.666 9.857 9.857 0 0 0 5.125 5.127.542.542 0 0 0 .671-.222c.047-.068.1-.135.146-.2a1.513 1.513 0 0 1 1.431-.547l4.332.721a1.473 1.473 0 0 1 1.186 1.033c.027.1.052.207.074.332a4.072 4.072 0 0 1-.951 3.369Z" /></svg>
+                    <p>{data.phone}</p>
+                </div>
             </div>
-            <div className='horizontal  wide'>
-            <svg viewBox="0 0 24 24"><path d="M20.489 20.011a4.273 4.273 0 0 1-3.241 1.489h-.116A15.042 15.042 0 0 1 2.5 6.868 4.28 4.28 0 0 1 4 3.494a4.028 4.028 0 0 1 3.349-.931 3.549 3.549 0 0 1 .474.119 1.492 1.492 0 0 1 1 1.191l.67 4.254a1.515 1.515 0 0 1-.541 1.412 3.608 3.608 0 0 1-.262.193.538.538 0 0 0-.215.666 9.857 9.857 0 0 0 5.125 5.127.542.542 0 0 0 .671-.222c.047-.068.1-.135.146-.2a1.513 1.513 0 0 1 1.431-.547l4.332.721a1.473 1.473 0 0 1 1.186 1.033c.027.1.052.207.074.332a4.072 4.072 0 0 1-.951 3.369Z" /></svg>
-            <p>{data.phone}</p>
             </div>
-            </p>
-            <h4>Payment Method</h4>
-            <p>     
-            <p>
-                <input type='radio' name='method' value={0} defaultChecked={true} onChange={e=>{setPayment(e.target.value)}}/>
-                Cash on delivary
-            </p>
-            <p>
-                <input type='radio' name='method' value={1} onChange={e=>{setPayment(e.target.value)}}/>
-                Pay now
-            </p>
-            </p>
-            <h4>Delivary</h4>
-            <p>
 
-            <p>{cart.length} Items</p>
-            <p>Total : ${total}</p>
-            <p>Delivary Expected On {delivery}</p>
-            </p>
+            <div>
+                <h4>Payment Method</h4>   
+                <p>
+                    <input type='radio' name='method' value={0} defaultChecked={true} onChange={e=>{setPayment(e.target.value)}}/>
+                    Cash on delivary
+                </p>
+                <p>
+                    <input type='radio' name='method' value={1} onChange={e=>{setPayment(e.target.value)}}/>
+                    Pay now
+                </p>
+            </div>
 
+            <div>
+                <h4>Delivary</h4>
+                <p>{cart.length} Items</p>
+                <p>Total : {total} USD</p>
+                <p>Delivary Expected On {delivery}</p>
+            </div>
+            
             <div className='horizontal wide'>
                     <div className='button' onClick={placeOrder}>Proceed</div>
                     <div className='button' onClick={()=>{setOrder(false)}}>Cancel</div>
@@ -121,7 +125,7 @@ const CartItem=({name,prize,image,count,changeCount})=>{
         <div className={DB.cartItem}>
             <img src={image}/>
             <h1>{name}</h1>
-            <h3>${prize}</h3>
+            <h3>{prize} USD</h3>
             <NumInput num={num} setNum={setNum}/>
         </div>
     );

@@ -1,6 +1,4 @@
 import N from './styles/Nav.module.css';
-import { useEffect, useState } from 'react';
-
 const Nav=(prop)=>{
 
 
@@ -21,15 +19,9 @@ const Nav=(prop)=>{
                 Dashboard
                 </div>
                 <div className={N.navIcon} onClick={()=>{prop.user?window.location='/wishlist':prop.login()}}>
-                <svg viewBox="0 0 20 20" ><path d="m10 3.22-.61-.6a5.5 5.5 0 0 0-7.78 7.77L10 18.78l8.39-8.4a5.5 5.5 0 0 0-7.78-7.77l-.61.61z"/></svg>
+                <svg viewBox="0 0 24 24"><path d="M22 9.075c0 1.645-.714 3.084-1.837 4.215l-7.653 7.504c-.204.103-.306.206-.51.206a.776.776 0 0 1-.51-.206l-7.653-7.607C2.714 12.057 2 10.514 2 8.87c0-1.542.714-2.98 1.837-4.112 1.224-1.13 2.755-1.85 4.387-1.747 1.327 0 2.551.514 3.572 1.336 2.449-1.953 5.918-1.747 8.163.514C21.286 5.888 22 7.43 22 9.075Z"/></svg>
                 Whishlist
                 </div>
-                {prop.user && prop.user.username?
-                    <div className={N.navIcon} onClick={prop.signout}>
-                    <svg  viewBox="0 0 48 48" ><path d="M23.992 6H6v36h18m9-9 9-9-9-9m-17 8.992h26" strokeWidth="4"/></svg>
-                    Logout
-                    </div>
-                :''}
             </div>
     );
 }

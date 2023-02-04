@@ -10,14 +10,13 @@
     padding:1%;
     overflow-y: hidden;
     box-sizing: border-box;
-    background: #e8e6e6;
    }
 .box{
     background:#fff;
     border-radius:15px;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: flex-start;
     padding: 0  40px;
     box-sizing: border-box;
@@ -26,10 +25,16 @@
 }
 
 .box p{
-    font-size: 25px;
+    font-size: 20px;
     color: #888;
     padding: 0;
     margin: 0;
+}
+.box a{
+    font-size: 20px;
+    color:var(--secondary);
+    text-decoration: none;
+    cursor: pointer;
 }
 .box svg, .box img {
     fill: none;
@@ -38,8 +43,8 @@
     height:50px;
 }
 .box img {
-    width: 60px;
-    height:60px;
+    width: 120px;
+    height:120px;
     border-radius: 60px;
 }
 .box:nth-child(1){
@@ -66,9 +71,9 @@
     padding: 0 2%;
     height:10vh;
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center;
-    background:hsl(0, 0%, 95%);
+    background:var(--bg2);
     overflow: hidden;
     gap:5%;
     border-radius: 15px;
@@ -76,13 +81,14 @@
 .order{
     padding: 1% 2%;
     width: 100%;
-    background:hsl(0, 0%, 95%);
+    background:var(--bg2);
     overflow: hidden;
     box-sizing: border-box;
     border-radius: 15px;
     margin-top:2%;
     display: flex;
     align-items: center;
+    gap:5%;
 }
 .order img{
     width: 100px;
@@ -99,15 +105,8 @@
 .order p {
     font-size: 20px;
 }
-.cartItem input[type=number]{
-    width:50px;
-    border: none;
-
-}
 .cartItem img{
-    flex: 1;
-    width: 80%;
-    height: 80%;
+    height: 90%;
     object-fit: contain;
 }
 .cartItem h1{
@@ -163,6 +162,9 @@
     justify-content: center;
     align-items: center;
     z-index: 200;
+}
+.editWrap>div{
+    padding:1% 2%;
 }
 .editWrap textarea,.editWrap input{
     resize: none;
