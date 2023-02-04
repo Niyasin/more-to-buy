@@ -9,19 +9,22 @@ import {GoogleAuthProvider,signInWithPopup,getAuth} from 'firebase/auth'
   const auth = getAuth(app);
 
   //functions
-  const signInGoogle= async ()=>{
-      signInWithPopup(auth,provider).then((result)=>{
-
-        let xhr=new XMLHttpRequest();
+  const signup= async()=>{
+    let token= await auth.currentUser.getIdToken();
+    let xhr=new XMLHttpRequest();
         xhr.open('POST','/api/signup');
         xhr.setRequestHeader('Content-Type','application/json');
         xhr.send(JSON.stringify({
-          username:result.user.displayName,
-          token:auth.currentUser.getIdToken(),
-          profilepic:result.user.photoURL,
-          email:result.user.email,
-          uid:result.user.uid,
+          username:auth.currentUser.displayName,
+          token,
+          profilepic:auth.currentUser.photoURL,
+          email:auth.currentUser.email,
+          uid:auth.currentUser.uid,
         }));
+  }
+  const signInGoogle= async ()=>{
+      signInWithPopup(auth,provider).then((result)=>{
+        signup();
       });
       
   }

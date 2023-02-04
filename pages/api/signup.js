@@ -25,7 +25,7 @@ export default async function handler(req, res) {
             cart:[],
             wishlist:[],
           });
-
+          res.status(200).json({error:false,data:null});
         }
       }
     });
